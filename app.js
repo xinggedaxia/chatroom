@@ -19,7 +19,6 @@ app.get("/",function (req,res) {
         res.redirect("/chatroom.html");
         return;
     }
-    res.redirect("/register.html");
 });
 app.get("/getname",function (req,res) {
     if(req.session.flag == true){
@@ -34,24 +33,32 @@ app.get("/getname",function (req,res) {
     }
 
 })
-app.get("/register",function (req,res) {
+app.get("/doRegister",function (req,res) {
 
     var username = req.query.username;
     if(usernames.indexOf(username) != -1){
-        res.send("用户名已被占用！");
+        res.json({
+            "result" : 0
+        });
         return;
     }if(username == ""){
-        res.send("用户名不能为空！");
+        res.json({
+            "result" : 1
+        });
         return;
     }
-    if(username.length > 4){
-        res.send("用户名太长了！");
+    if(username.length > 6){
+        res.json({
+            "result" : 2
+        });
         return;
     }
     req.session.username = username;
     req.session.flag = true;
     usernames.push(username);
-    res.redirect("/chatroom.html");
+    res.json({
+        "result" : 3
+    })
 });
 
 io.on("connection",function (sockit) {

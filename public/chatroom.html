@@ -138,6 +138,7 @@
 <script>
 $(function () {
     var socket = io();
+
     $("#text").css({"transform" : "translateX(0)"});
     // 获取用户名
     $.get("/getname",function (data) {
