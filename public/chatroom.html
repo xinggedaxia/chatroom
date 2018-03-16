@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>聊天室</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <script src="socket.io/socket.io.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <style>
+        body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .content{
+            position: relative;
+            width: 100%;
+            padding-top: 50px;
+            height: 450px;
+            background-color: lightgray;
+            overflow: scroll;
+        }
+       h3{
+           width: 100%;
+           text-align: center;
+           line-height: 80px;
+           color: #d4262f;
+           font-size: 25px;
+           background-color: gray;
+       }
+        ul{
+            list-style: none;
+            width: 100%;
+        }
+        li{
+            width: 100%;
+            height: auto;
+            position: relative;
+            line-height: 40px;
+            background-color: gray;
+            margin-bottom: 5px;
+        }
+        span.username{
+            position: absolute;
+            left:0;
+            top:0;
+            width: 80px;
+            height: 40px;
+            background-color: #0058ff;
+            overflow: hidden;
+        }
+        #tishi{
+            background-color: #FF724D;
+        }
+        #tishi2{
+            position: absolute;
+            left:0;
+            top:5px;
+        }
+        span.say{
+            display: inline-block;
+            width: 100%;
+            height: 40px;
+            text-indent: 6em;
+        }
+        textarea{
+
+            width: 80%;
+            height: 40px;
+            line-height: 40px;
+            border: 2px solid gray;
+        }
+        #send{
+            width: 19%;
+            height: 42px;
+            border-radius: 5px;
+            background-color: green;
+            float: right;
+        }
+        #sendM{
+            position: fixed;
+            width: 90%;
+            bottom: 0;
+            left: 5%;
+            margin-bottom: 5px;
+        }
+        #text{
+            transition : all 2s;
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3>欢迎你&nbsp;<span id="username"></span></h3>
+    <div class="content">
+        <ul id="chatlist">
+            <li id="tishi2"><span class="username" id="tishi">系统提示：</span><span class="say" id="text">你已经加入聊天室，快开始聊天吧！</span></li>
+        </ul>
+    </div>
+    <form class="form-inline" id="sendM">
+        <div class="form-group">
+            <textarea name="content" id="content"  resize="none"   ></textarea>
+            <button type="button" class="btn btn-default " id="send">发送</button>
+        </div>
+
+    </form>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script>
+$(function () {
+    var socket = io();
+    $("#text").css({"transform" : "translateX(0)"});
+    // 获取用户名
+    $.get("/getname",function (data) {
+        console.log(data);
+        $("#username").text(data.username);
+        //通知玩家进入
+        socket.emit("userlogin",{
+            "username" : $("#username").text(),
+        });
+    });
+
+    $("#send").click(function () {
+        socket.emit("message",{
+            "username" : $("#username").html(),
+            "content" : $("#content").val()
+        });
+        $("#content").val("");
+    });
+
+    //监听服务器回复
+    socket.on("responese",function (res) {
+      if(res.type == 1){
+          if(res.username == $("#username").text()){
+              return;
+          }
+          console.log(res.content);
+           $("#text").css("dispaly","none");
+           $("#text").css({"transtion":"0s"});
+           $("#text").css({"transform":"translateX(100%)"});
+           $("#text").text(res.content);
+
+           setTimeout(function () {
+               $("#text").css("dispaly","block");
+               $("#text").css({"transtion":"all 2s"});
+               $("#text").css({"transform":"translateX(0px)"});
+           },2000);
+
+       }else if(res.type == 2){
+            var li = $("<li><span class='username'>"+ res.username +":</span><span class='say'>"+ res.content +"</span></li>");
+            $("#chatlist").prepend(li);
+        }
+
+    });
+
+
+});
+
+
+</script>
+</body>
+</html>
