@@ -26,13 +26,12 @@
             padding-top: 50px;
             height: 450px;
             background-color: lightgray;
-            overflow: scroll;
         }
        h3{
            width: 100%;
            text-align: center;
            line-height: 80px;
-           color: #d4262f;
+           color: #060606;
            font-size: 25px;
            background-color: gray;
        }
@@ -52,15 +51,16 @@
             position: absolute;
             left:0;
             top:0;
-            width: 80px;
+            padding-left: 5px;
+            width: 100px;
             height: 40px;
-            background-color: #0058ff;
+            background-color: #2fffd0;
             overflow: hidden;
         }
         #tishi{
             background-color: #FF724D;
         }
-        #tishi2{
+        #systemMessage{
             position: absolute;
             left:0;
             top:5px;
@@ -69,28 +69,41 @@
             display: inline-block;
             width: 100%;
             height: 40px;
-            text-indent: 6em;
+            text-indent: 8em;
         }
-        textarea{
 
-            width: 80%;
-            height: 40px;
-            line-height: 40px;
-            border: 2px solid gray;
-        }
-        #send{
-            width: 19%;
-            height: 42px;
-            border-radius: 5px;
-            background-color: green;
-            float: right;
-        }
         #sendM{
+            width: 100%;
             position: fixed;
-            width: 90%;
-            bottom: 0;
-            left: 5%;
             margin-bottom: 5px;
+            left:0;
+            bottom: 5px;
+        }
+        #sendM form{
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+        }
+        #sendM_div{
+            display: flex;
+            display: -webkit-flex; /* Safari */
+            flex-direction: row;
+            justify-content:center ;
+        }
+        #sendM_div .space{
+            flex-grow: 1;
+        }
+        #sendM_div input{
+            flex-grow: 4;
+        }
+        #sendM_div button{
+            flex-grow: 1;
+            background-color: #89fffd;
+            border-top-style: none;
+            border-right-style: none;
+            border-bottom-style: none;
+            border-left-style: none;
+
         }
         #text{
             transition : all 2s;
@@ -103,21 +116,24 @@
     <h3>欢迎你&nbsp;<span id="username"></span></h3>
     <div class="content">
         <ul id="chatlist">
-            <li id="tishi2"><span class="username" id="tishi">系统提示：</span><span class="say" id="text">你已经加入聊天室，快开始聊天吧！</span></li>
+            <li id="systemMessage"><span class="username" id="tishi">系统提示：</span><span class="say" id="text">你已经加入聊天室，快开始聊天吧！</span></li>
         </ul>
     </div>
-    <form class="form-inline" id="sendM">
-        <div class="form-group">
-            <textarea name="content" id="content"  resize="none"   ></textarea>
-            <button type="button" class="btn btn-default " id="send">发送</button>
+
+</div>
+<div  id="sendM">
+    <form class="form-inline" >
+        <div class="form-group" id="sendM_div">
+            <div class="space"></div>
+            <input name="content"   placeholder="在此输入内容" id="content"     >
+            <button type="button" id="send">发送</button>
+            <div class="space"></div>
         </div>
 
     </form>
 </div>
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery-3.3.1.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
 <script>
 $(function () {
