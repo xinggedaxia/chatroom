@@ -35,6 +35,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script>
     $(function () {
+        //用户名合法性验证
         $("#btn").click(function () {
             $.get("doRegister",{
               "username" : $("#username").val()
@@ -46,8 +47,7 @@
                 }else if(result.result == 2){
                     alert("用户名不能超过6位！")
                 }else{
-                    console.log(1);
-                    window.location.href = "http://192.168.1.104/chatroom.html";
+                    window.location.href = "/chatroom.html";
                 }
             });
         })

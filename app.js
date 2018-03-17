@@ -18,8 +18,11 @@ app.get("/",function (req,res) {
     if(req.session.flag == true){
         res.redirect("/chatroom.html");
         return;
+    }else{
+        res.redirect("/register.html");
     }
 });
+//验证用户是否注册，并获取注册的用户名，
 app.get("/getname",function (req,res) {
     if(req.session.flag == true){
         res.json({
