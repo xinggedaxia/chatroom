@@ -5,10 +5,18 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 //session公式：
 var session = require('express-session');
+//这里传入了一个密钥加session id
+var FileStore = require('session-file-store')(session);
+var identityKey = 'skey';
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true
+    name: identityKey,
+    secret: 'chyingp',  // 用来对session id相关的cookie进行签名
+    store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
+    saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
+    resave: false,  // 是否每次都重新保存会话，建议false
+    cookie: {
+        maxAge: 1000000 * 1000  // 有效期，单位是毫秒
+    }
 }));
 var usernames = [];
 
@@ -25,17 +33,19 @@ app.get("/",function (req,res) {
 //验证用户是否注册，并获取注册的用户名，
 app.get("/getname",function (req,res) {
     if(req.session.flag == true){
+        console.log(req.session.username + "进入！")
         res.json({
             "log" : "1",
             "username" : req.session.username
-        })
+        });
     }else{
+        console.log("踢出！!!");
         res.json({
             "log" : "0"
-        })
+        });
     }
 
-})
+});
 app.get("/doRegister",function (req,res) {
 
     var username = req.query.username;
@@ -59,9 +69,10 @@ app.get("/doRegister",function (req,res) {
     req.session.username = username;
     req.session.flag = true;
     usernames.push(username);
+    console.log(req.session.flag);
     res.json({
         "result" : 3
-    })
+    });
 });
 
 io.on("connection",function (sockit) {

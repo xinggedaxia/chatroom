@@ -11,8 +11,6 @@
     <script src="socket.io/socket.io.js"></script>
 
     <style>
-
-
         * {
             margin: 0;
             padding: 0;
@@ -20,6 +18,7 @@
         body {
             width: 100%;
             height: 100%;
+            background-color: #6a6a6a;
             overflow: hidden;
         }
 
@@ -28,7 +27,7 @@
             width: 100%;
             padding-top: 50px;
             padding-bottom: 100px;
-            height: 350px;
+            height: 450px;
             background-color: lightgray;
             overflow: auto;
         }
@@ -162,8 +161,7 @@
         var socket = io();
         // 验证用户受否非法闯入，并获取用户名
         $.get("/getname", function (data) {
-            console.log(data);
-            if(data.log == 0 ){
+            if(data.log == "0" ){
                 window.location.href = "/register.html"
             }else{
                 //初始化用户名
@@ -195,7 +193,6 @@
                 $("#text").css({"transform": "translateX(100%)"});
                 $("#text").css({"transtion": "all 0s"});
                 setTimeout(function () {
-                    console.log("开始装逼");
                     $("#text").text(res.content);
                     // $("#text").css("display","block");
                     $("#text").css({"transtion": "all 2s"});
